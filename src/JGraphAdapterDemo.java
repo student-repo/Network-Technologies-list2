@@ -31,8 +31,6 @@ public class JGraphAdapterDemo {
     private HashMap<Edge, Double> edgeUnspoiltProbability;
     private HashMap<String, HashSet<String>> graphStructure;
     private int nodeVisualizationDistance = 80;
-    private int testSuccessfulNumber = 0;
-    private int testNumber = 0;
 
 
     public JGraphAdapterDemo(){
@@ -56,6 +54,33 @@ public class JGraphAdapterDemo {
 //        System.out.println(edgeUnspoiltProbability.size());
     }
 
+
+    public void addEdge(String v1, String v2, double unspoiltProbability){
+        ///////////////////////////////////////////////////
+//        System.out.println("graphStructure before: ");
+//        for(String s: graphStructure.keySet()){
+//            System.out.println(s + ": " +graphStructure.get(s));
+//        }
+        ///////////////////////////////////////////////////
+
+        if(graphStructure.containsKey(v1) && graphStructure.containsKey(v2)){
+            graphStructure.get(v1).add(v2);
+            graphStructure.get(v2).add(v1);
+            initEdgeUnspoiltProbability();
+            edgeUnspoiltProbability.put(new Edge(v1, v2), unspoiltProbability);
+        }
+        ///////////////////////////////////////////////////
+//        System.out.println("graphStructure after: ");
+//        for(String s: graphStructure.keySet()){
+//            System.out.println(s + ": " +graphStructure.get(s));
+//        }
+//
+//        for(Edge e: edgeUnspoiltProbability.keySet()){
+//            System.out.println("edge: " + e.getVertex1() + ", " + e.getVertex2() + " " + edgeUnspoiltProbability.get(e));
+//        }
+//        System.out.println(edgeUnspoiltProbability.size());
+        ///////////////////////////////////////////////////
+    }
     private void initgraphStructure() {
         graphStructure = new HashMap<>();
 
@@ -72,23 +97,18 @@ public class JGraphAdapterDemo {
 //        System.out.println(graphStructure);
     }
 
-    public void testNetwork(int testSize){
-        int success = 0;
-        int test = 0;
-
+    public TestNetworkResult testNetwork(int testSize){
+        TestNetworkResult r = new TestNetworkResult();
         UndirectedGraph<String, DefaultEdge> g;
         for(int i = 0; i < testSize; i++){
             g = createGraph();
             runSingleNetworkTest(g);
             if(new ConnectivityInspector(g).isGraphConnected()){
-                success++;
+                r.incrementSuccessNumber();
             }
-            test++;
+            r.incrementTestNumber();
         }
-
-        System.out.println("Success number: " + success);
-        System.out.println("Test number: " + test);
-
+        return r;
     }
 
     private void runSingleNetworkTest(UndirectedGraph<String, DefaultEdge> g){
@@ -102,18 +122,21 @@ public class JGraphAdapterDemo {
     }
 
 
-
-
     public static void main(String[] args){
         setScreenWidth();
         JGraphAdapterDemo applet = new JGraphAdapterDemo();
 
-        applet.testNetwork(100000);
+//        task 1 a)
+//        System.out.println(applet.testNetwork(100000).getPercentResult());
+
+        UndirectedGraph<String, DefaultEdge> g = applet.createGraph();
+        g.addEdge("v1", "v20");
+
 
 
 
         JFrame frame = new JFrame();
-        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(applet.createGraph())));
+        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(g)));
         frame.setTitle("JGraphT Adapter to JGraph Demo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -123,7 +146,7 @@ public class JGraphAdapterDemo {
     }
 
 
-    private UndirectedGraph<String, DefaultEdge> createGraph(){
+    public UndirectedGraph<String, DefaultEdge> createGraph(){
         UndirectedGraph<String, DefaultEdge> g =
                 new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
 
@@ -137,27 +160,12 @@ public class JGraphAdapterDemo {
                 g.addEdge(v1, v);
             }
         }
-//          to remove all edges from vertex
-//        for(String v: graphStructure.get("v5")){
-//            g.removeEdge("v5", v);
-//        }
-//            g.removeEdge("v6", "v5");
-
-
-//        System.out.println(new ConnectivityInspector(g).isGraphConnected());
-
-//        System.out.println(g.edgeSet());
-
         return g;
     }
 
 
-    private JGraph createGraphVisualization(UndirectedGraph<String, DefaultEdge> g){
+    public JGraph createGraphVisualization(UndirectedGraph<String, DefaultEdge> g){
 
-//        UndirectedGraph<String, DefaultEdge> g = createGraph();
-
-
-        // create a visualization using JGraph, via an adapter
         JGraphModelAdapter<String, DefaultEdge> jgAdapter = new JGraphModelAdapter<>(g);
 
         JGraph jgraph = new JGraph(jgAdapter);
@@ -166,10 +174,10 @@ public class JGraphAdapterDemo {
         for(String v: g.vertexSet()){
             int vNumber = Integer.parseInt(v.substring(1));
             if(vNumber % 2 == 0){
-                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 200);
+                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 300);
             }
             else {
-                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 100);
+                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 400);
             }
         }
         return  jgraph;
