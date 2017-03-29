@@ -48,9 +48,9 @@ public class JGraphAdapterDemo {
 
     }
 
-    public ListenableGraph<String, DefaultEdge> createGraph(){
-        ListenableGraph<String, DefaultEdge> g =
-                new ListenableDirectedMultigraph<>(DefaultEdge.class);
+    public UndirectedGraph<String, DefaultEdge> createGraph(){
+        UndirectedGraph<String, DefaultEdge> g =
+                new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
 
         String[] s = new String[vertexNumber ];
 
@@ -62,7 +62,10 @@ public class JGraphAdapterDemo {
         for(int i = 0; i < vertexNumber - 1; i++){
             g.addEdge(s[i], s[i + 1]);
         }
+        ConnectivityInspector a = new ConnectivityInspector(g);
+        System.out.println(a.isGraphConnected());
         g.removeEdge(s[5], s[6]);
+        System.out.println(a.isGraphConnected());
 
         return g;
     }
@@ -70,7 +73,7 @@ public class JGraphAdapterDemo {
 
     public JGraph createGraphVisualization(){
 
-        ListenableGraph<String, DefaultEdge> g = createGraph();
+        UndirectedGraph<String, DefaultEdge> g = createGraph();
 
 
         // create a visualization using JGraph, via an adapter
