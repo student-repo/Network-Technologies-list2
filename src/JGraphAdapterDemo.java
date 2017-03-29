@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.*;
 
@@ -23,23 +26,94 @@ public class JGraphAdapterDemo {
 
     private static int screenWidth;
     private int vertexNumber = 20;
-//    private JGraphModelAdapter<String, DefaultEdge> jgAdapter;
     private int vertexWidth = 50;
     private int vertexHeight = 50;
+    private HashMap<Edge, Double> edgeUnspoiltProbability;
+    private HashMap<String, HashSet<String>> graphStructure;
+    private int nodeVisualizationDistance = 80;
+    private int testSuccessfulNumber = 0;
+    private int testNumber = 0;
 
-    /**
-     * An alternative starting point for this demo, to also allow running this applet as an
-     * application.
-     *
-     * @param args ignored.
-     */
+
+    public JGraphAdapterDemo(){
+        initgraphStructure();
+        initEdgeUnspoiltProbability();
+
+    }
+
+    private void initEdgeUnspoiltProbability() {
+        edgeUnspoiltProbability = new HashMap<>();
+        for(String v1: graphStructure.keySet()){
+            for(String v2: graphStructure.get(v1)){
+                if(!edgeUnspoiltProbability.containsKey(new Edge(v1, v2))){
+                    edgeUnspoiltProbability.put(new Edge(v1, v2), 0.95);
+                }
+            }
+        }
+//        for(Edge e: edgeUnspoiltProbability.keySet()){
+//            System.out.println("edge: " + e.getVertex1() + ", " + e.getVertex2());
+//        }
+//        System.out.println(edgeUnspoiltProbability.size());
+    }
+
+    private void initgraphStructure() {
+        graphStructure = new HashMap<>();
+
+        for(int i = 1; i <= vertexNumber; i++){
+            HashSet<String> h = new HashSet<String>();
+            if(i < vertexNumber){
+                h.add("v" + (i + 1));
+            }
+            if(i > 1){
+                h.add("v" + (i - 1));
+            }
+            graphStructure.put("v" + i, h);
+        }
+//        System.out.println(graphStructure);
+    }
+
+    public void testNetwork(int testSize){
+        int success = 0;
+        int test = 0;
+
+        UndirectedGraph<String, DefaultEdge> g;
+        for(int i = 0; i < testSize; i++){
+            g = createGraph();
+            runSingleNetworkTest(g);
+            if(new ConnectivityInspector(g).isGraphConnected()){
+                success++;
+            }
+            test++;
+        }
+
+        System.out.println("Success number: " + success);
+        System.out.println("Test number: " + test);
+
+    }
+
+    private void runSingleNetworkTest(UndirectedGraph<String, DefaultEdge> g){
+        double randomNum;
+        for(Edge e: edgeUnspoiltProbability.keySet()){
+            randomNum = ThreadLocalRandom.current().nextDouble();
+            if(randomNum >= edgeUnspoiltProbability.get(e)){
+                g.removeEdge(e.getVertex1(), e.getVertex2());
+            }
+        }
+    }
+
+
+
+
     public static void main(String[] args){
         setScreenWidth();
         JGraphAdapterDemo applet = new JGraphAdapterDemo();
 
+        applet.testNetwork(100000);
+
+
 
         JFrame frame = new JFrame();
-        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization()));
+        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(applet.createGraph())));
         frame.setTitle("JGraphT Adapter to JGraph Demo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -48,32 +122,39 @@ public class JGraphAdapterDemo {
 
     }
 
-    public UndirectedGraph<String, DefaultEdge> createGraph(){
+
+    private UndirectedGraph<String, DefaultEdge> createGraph(){
         UndirectedGraph<String, DefaultEdge> g =
                 new SimpleGraph<String, DefaultEdge>(DefaultEdge.class);
 
-        String[] s = new String[vertexNumber ];
-
-        for(int i = 0; i < vertexNumber; i++){
-            s[i] = "v" + (i + 1);
-            g.addVertex(s[i]);
+        for(String v: graphStructure.keySet()){
+            g.addVertex(v);
         }
 
-        for(int i = 0; i < vertexNumber - 1; i++){
-            g.addEdge(s[i], s[i + 1]);
+        for (String v1 : graphStructure.keySet()) {
+//            System.out.println("Key: " + v1 + ", Value: " + graphStructure.get(v1));
+            for (String v : graphStructure.get(v1)) {
+                g.addEdge(v1, v);
+            }
         }
-        ConnectivityInspector a = new ConnectivityInspector(g);
-        System.out.println(a.isGraphConnected());
-        g.removeEdge(s[5], s[6]);
-        System.out.println(a.isGraphConnected());
+//          to remove all edges from vertex
+//        for(String v: graphStructure.get("v5")){
+//            g.removeEdge("v5", v);
+//        }
+//            g.removeEdge("v6", "v5");
+
+
+//        System.out.println(new ConnectivityInspector(g).isGraphConnected());
+
+//        System.out.println(g.edgeSet());
 
         return g;
     }
 
 
-    public JGraph createGraphVisualization(){
+    private JGraph createGraphVisualization(UndirectedGraph<String, DefaultEdge> g){
 
-        UndirectedGraph<String, DefaultEdge> g = createGraph();
+//        UndirectedGraph<String, DefaultEdge> g = createGraph();
 
 
         // create a visualization using JGraph, via an adapter
@@ -81,25 +162,20 @@ public class JGraphAdapterDemo {
 
         JGraph jgraph = new JGraph(jgAdapter);
 
-        int foo = (screenWidth - 200) / (vertexNumber * 2);
-        int k = 0;
-        int i = 0;
-        for(String v: g.vertexSet()){
 
-            if(i % 2 == 0){
-                positionVertexAt(jgAdapter, v, k, 200);
+        for(String v: g.vertexSet()){
+            int vNumber = Integer.parseInt(v.substring(1));
+            if(vNumber % 2 == 0){
+                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 200);
             }
             else {
-                positionVertexAt(jgAdapter, v, k, 100);
+                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 100);
             }
-            i ++;
-            k += foo;
         }
         return  jgraph;
     }
 
-    private void positionVertexAt(JGraphModelAdapter<String, DefaultEdge> jgAdapter, Object vertex, int x, int y)
-    {
+    private void positionVertexAt(JGraphModelAdapter<String, DefaultEdge> jgAdapter, Object vertex, int x, int y){
         DefaultGraphCell cell = jgAdapter.getVertexCell(vertex);
         AttributeMap attr = cell.getAttributes();
 
