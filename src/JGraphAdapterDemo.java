@@ -16,12 +16,6 @@ import org.jgrapht.graph.*;
 // resolve ambiguity
 import org.jgrapht.graph.DefaultEdge;
 
-/**
- * A demo applet that shows how to use JGraph to visualize JGraphT graphs.
- *
- * @author Barak Naveh
- * @since Aug 3, 2003
- */
 public class JGraphAdapterDemo {
 
     private static int screenWidth;
@@ -36,7 +30,6 @@ public class JGraphAdapterDemo {
     public JGraphAdapterDemo(){
         initgraphStructure();
         initEdgeUnspoiltProbability();
-
     }
 
     private void initEdgeUnspoiltProbability() {
@@ -55,7 +48,7 @@ public class JGraphAdapterDemo {
     }
 
 
-    public void addEdge(String v1, String v2, double unspoiltProbability){
+    public boolean addEdge(String v1, String v2, double unspoiltProbability){
         ///////////////////////////////////////////////////
 //        System.out.println("graphStructure before: ");
 //        for(String s: graphStructure.keySet()){
@@ -64,11 +57,17 @@ public class JGraphAdapterDemo {
         ///////////////////////////////////////////////////
 
         if(graphStructure.containsKey(v1) && graphStructure.containsKey(v2)){
+            if(edgeExist(new Edge(v1, v2)) || v1.equals(v2)){
+                return false;
+            }
             graphStructure.get(v1).add(v2);
             graphStructure.get(v2).add(v1);
             initEdgeUnspoiltProbability();
             edgeUnspoiltProbability.put(new Edge(v1, v2), unspoiltProbability);
+            System.out.println(edgeUnspoiltProbability.size());
+            return true;
         }
+
         ///////////////////////////////////////////////////
 //        System.out.println("graphStructure after: ");
 //        for(String s: graphStructure.keySet()){
@@ -80,6 +79,7 @@ public class JGraphAdapterDemo {
 //        }
 //        System.out.println(edgeUnspoiltProbability.size());
         ///////////////////////////////////////////////////
+        return false;
     }
     private void initgraphStructure() {
         graphStructure = new HashMap<>();
@@ -111,6 +111,10 @@ public class JGraphAdapterDemo {
         return r;
     }
 
+    public boolean edgeExist(Edge e){
+        return edgeUnspoiltProbability.containsKey(e);
+    }
+
     private void runSingleNetworkTest(UndirectedGraph<String, DefaultEdge> g){
         double randomNum;
         for(Edge e: edgeUnspoiltProbability.keySet()){
@@ -119,6 +123,10 @@ public class JGraphAdapterDemo {
                 g.removeEdge(e.getVertex1(), e.getVertex2());
             }
         }
+    }
+
+    public int getVertexNumber(){
+        return vertexNumber;
     }
 
 
