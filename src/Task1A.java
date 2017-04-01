@@ -1,24 +1,26 @@
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+
+import org.jgrapht.alg.KShortestPaths;
 
 import javax.swing.*;
 
-/**
- * Created by ubuntu-master on 29.03.17.
- */
 public class Task1A {
 
     public static void main(String[] args){
-        JGraphAdapterDemo applet = new JGraphAdapterDemo();
-
-
-        System.out.println(applet.testNetwork(100000).getPercentResult());
+        Graph graph = new Graph();
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
+        graph = new Graph();
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
 
         JFrame frame = new JFrame();
-        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(applet.createGraph())));
-        frame.setTitle("JGraphT Adapter to JGraph Demo");
+        frame.getContentPane().add(new JScrollPane(graph.createGraphVisualization(graph.createGraph())));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+
+
+
+
     }
 }

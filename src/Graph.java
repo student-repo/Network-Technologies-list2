@@ -11,12 +11,13 @@ import org.jgraph.*;
 import org.jgraph.graph.*;
 import org.jgrapht.*;
 import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.alg.KShortestPaths;
 import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 // resolve ambiguity
 import org.jgrapht.graph.DefaultEdge;
 
-public class JGraphAdapterDemo {
+public class Graph {
 
     private static int screenWidth;
     private int vertexNumber = 20;
@@ -27,7 +28,7 @@ public class JGraphAdapterDemo {
     private int nodeVisualizationDistance = 80;
 
 
-    public JGraphAdapterDemo(){
+    public Graph(){
         initGraphStructure();
         initEdgeUnspoiltProbability();
     }
@@ -48,13 +49,16 @@ public class JGraphAdapterDemo {
 //        System.out.println(edgeUnspoiltProbability.size());
 
 
-    public boolean addEdge(String v1, String v2, double unspoiltProbability){
-        ///////////////////////////////////////////////////
+
+
+    ///////////////////////////////////////////////////
 //        System.out.println("graphStructure before: ");
 //        for(String s: graphStructure.keySet()){
 //            System.out.println(s + ": " +graphStructure.get(s));
 //        }
-        ///////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+
+    public boolean addEdge(String v1, String v2, double unspoiltProbability){
 
         if(graphStructure.containsKey(v1) && graphStructure.containsKey(v2)){
             if(edgeExist(new Edge(v1, v2)) || v1.equals(v2)){
@@ -64,11 +68,14 @@ public class JGraphAdapterDemo {
             graphStructure.get(v2).add(v1);
             initEdgeUnspoiltProbability();
             edgeUnspoiltProbability.put(new Edge(v1, v2), unspoiltProbability);
-            System.out.println(edgeUnspoiltProbability.size());
             return true;
         }
 
-        ///////////////////////////////////////////////////
+        return false;
+    }
+
+
+    ///////////////////////////////////////////////////
 //        System.out.println("graphStructure after: ");
 //        for(String s: graphStructure.keySet()){
 //            System.out.println(s + ": " +graphStructure.get(s));
@@ -78,9 +85,8 @@ public class JGraphAdapterDemo {
 //            System.out.println("edge: " + e.getVertex1() + ", " + e.getVertex2() + " " + edgeUnspoiltProbability.get(e));
 //        }
 //        System.out.println(edgeUnspoiltProbability.size());
-        ///////////////////////////////////////////////////
-        return false;
-    }
+    ///////////////////////////////////////////////////
+
     private void initGraphStructure() {
         graphStructure = new HashMap<>();
 
@@ -94,6 +100,10 @@ public class JGraphAdapterDemo {
             }
             graphStructure.put("v" + i, h);
         }
+    }
+
+    public boolean edgeExist(Edge e){
+        return edgeUnspoiltProbability.containsKey(e);
     }
 
     public TestNetworkResult testNetwork(int testSize){
@@ -110,9 +120,6 @@ public class JGraphAdapterDemo {
         return r;
     }
 
-    public boolean edgeExist(Edge e){
-        return edgeUnspoiltProbability.containsKey(e);
-    }
 
     private void runSingleNetworkTest(UndirectedGraph<String, DefaultEdge> g){
         double randomNum;
@@ -140,14 +147,20 @@ public class JGraphAdapterDemo {
         g.addEdge("v1", "v20");
 
 
+        GraphPath a = (GraphPath) new KShortestPaths(g, "v1", 1).getPaths("v19").get(0);
+
+//        System.out.println(new KShortestPaths(g, "v1", 1).getPaths("v4").get(0));
+
+        System.out.println(a.getEdgeList());
 
 
-        JFrame frame = new JFrame();
-        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(g)));
-        frame.setTitle("JGraphT Adapter to JGraph Demo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+
+//        JFrame frame = new JFrame();
+//        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(g)));
+//        frame.setTitle("JGraphT Adapter to JGraph Demo");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.pack();
+//        frame.setVisible(true);
 
 
     }
@@ -183,7 +196,7 @@ public class JGraphAdapterDemo {
                 positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 300);
             }
             else {
-                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 400);
+                positionVertexAt(jgAdapter, v, vNumber * nodeVisualizationDistance, 450);
             }
         }
         return  jgraph;

@@ -19,6 +19,6 @@ public class TestNetworkResult {
 
     @Override
     public String toString() {
-        return "Test number: " + testNumber + " Success number: " + successNumber;
+        return "Test number: " + testNumber + " Success number: " + successNumber + "\n as a percentage: " + ((double)successNumber / (double)testNumber) * 100 + " %";
     }
 }

@@ -9,20 +9,22 @@ import javax.swing.*;
 public class Task1B {
 
     public static void main(String[] args){
-        JGraphAdapterDemo applet = new JGraphAdapterDemo();
+        Graph graph = new Graph();
 
-        UndirectedGraph<String, DefaultEdge> g = applet.createGraph();
-        applet.addEdge("v1", "v20", 0.95);
+        UndirectedGraph<String, DefaultEdge> g = graph.createGraph();
+        graph.addEdge("v1", "v20", 0.95);
 
-        System.out.println(applet.testNetwork(100000).getPercentResult());
-//        g.addEdge("v1", "v20");
-        g = applet.createGraph();
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
+
+        //        g.addEdge("v1", "v20");
+        g = graph.createGraph();
 
 
 
 
         JFrame frame = new JFrame();
-        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(g)));
+        frame.getContentPane().add(new JScrollPane(graph.createGraphVisualization(g)));
         frame.setTitle("JGraphT Adapter to JGraph Demo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -31,3 +33,17 @@ public class Task1B {
 
     }
 }
+
+
+////        g.addEdge("v1", "v20");
+//        g = graph.createGraph();
+//
+//
+//
+//
+//                JFrame frame = new JFrame();
+//                frame.getContentPane().add(new JScrollPane(graph.createGraphVisualization(g)));
+//                frame.setTitle("JGraphT Adapter to JGraph Demo");
+//                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//                frame.pack();
+//                frame.setVisible(true);

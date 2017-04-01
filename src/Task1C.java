@@ -9,27 +9,86 @@ import javax.swing.*;
 public class Task1C {
 
     public static void main(String[] args){
-        JGraphAdapterDemo applet = new JGraphAdapterDemo();
+        Graph graph = new Graph();
 
-        UndirectedGraph<String, DefaultEdge> g = applet.createGraph();
-        applet.addEdge("v1", "v20", 0.95);
-        applet.addEdge("v1", "v10", 0.8);
-        applet.addEdge("v5", "v15", 0.7);
+        UndirectedGraph<String, DefaultEdge> g = graph.createGraph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
 
-        System.out.println(applet.testNetwork(100000).getPercentResult());
-//        g.addEdge("v1", "v20");
-        g = applet.createGraph();
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
 
+        graph = new Graph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
 
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
 
+        graph = new Graph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
 
-        JFrame frame = new JFrame();
-        frame.getContentPane().add(new JScrollPane(applet.createGraphVisualization(g)));
-        frame.setTitle("JGraphT Adapter to JGraph Demo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
+
+        graph = new Graph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
+
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
+
+        graph = new Graph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
+
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
+
+        graph = new Graph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
+
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
+
+        graph = new Graph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
+
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
+
+        graph = new Graph();
+        graph.addEdge("v1", "v20", 0.95);
+        graph.addEdge("v1", "v10", 0.8);
+        graph.addEdge("v5", "v15", 0.7);
+
+        System.out.println(graph.testNetwork(100000));
+        System.out.println();
 
 
     }
 }
+
+////        g.addEdge("v1", "v20");
+//        g = graph.createGraph();
+//
+//
+//
+//
+//                JFrame frame = new JFrame();
+//                frame.getContentPane().add(new JScrollPane(graph.createGraphVisualization(g)));
+//                frame.setTitle("JGraphT Adapter to JGraph Demo");
+//                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//                frame.pack();
+//                frame.setVisible(true);
+
