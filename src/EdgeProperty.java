@@ -24,7 +24,7 @@ public class EdgeProperty{
     }
 
     public boolean addCurrentPackages(int p){
-        if(currentPackages + p <= capacity){
+        if(currentPackages + p < capacity){
             currentPackages += p;
             return true;
         }

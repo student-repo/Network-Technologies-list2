@@ -1,4 +1,4 @@
-import java.awt.*;
+
 import java.awt.geom.*;
 import java.io.File;
 import java.io.IOException;
@@ -50,8 +50,6 @@ public class Graph2 {
         initEdges();
         initPackagesIntensityMap();
         packagesIntensitySum = getSumPackagesIntensityMap();
-
-        System.out.println();
     }
 
     private int getSumPackagesIntensityMap(){
@@ -61,7 +59,6 @@ public class Graph2 {
                 i += packagesIntensityMap.get(v).get(vv);
             }
         }
-        System.out.println(i);
         return i;
     }
 
@@ -115,7 +112,12 @@ public class Graph2 {
         double s = 0.0;
         for(Edge e: edges.keySet()){
             s += (double)edges.get(e).getCurrentPackages()/((double)edges.get(e).getCapacity() - (double)edges.get(e).getCurrentPackages());
+//            System.out.println((double)edges.get(e).getCurrentPackages() + " / (" + (double)edges.get(e).getCapacity() + " - " + (double)edges.get(e).getCurrentPackages() + " )");
+//            System.out.println("s = " + s);
         }
+//        System.out.println((double)s / (double)packagesIntensitySum);
+//        System.out.println();
+//        System.out.println();
         return (double)s / (double)packagesIntensitySum;
     }
 
@@ -147,55 +149,42 @@ public class Graph2 {
         " graph inconnection fail: " + graphInconnectionFail + " time fail: " + timeFail);
     }
 
-    public NetworkTestResult networkSingleTest(){
-//        UndirectedGraph<String, DefaultEdge> g = createGraph();
+    private NetworkTestResult networkSingleTest(){
         initVertexes();
         initEdges();
         g = createGraph();
         for(String v: packagesIntensityMap.keySet()){
             for(String vv: packagesIntensityMap.get(v).keySet()){
-//                System.out.println("vertex: " + v + " key: " + vv + " value: " + packagesIntensityMap.get(v).get(vv) + " random value: " + ThreadLocalRandom.current().nextDouble());
                 String currentVertex = v;
                 String nextVertex = "";
                     while(!nextVertex.equals(vv)){
                         nextVertex = getNextShortestEdge(currentVertex, g, vv).getVertex2();
                         currentVertex = getNextShortestEdge(currentVertex, g, vv).getVertex1();
-//                        System.out.println("current vertex: " + currentVertex);
-//                        System.out.println("next vertex: " + nextVertex);
 
+
+//                        for(Edge e: edges.keySet()){
+//                            System.out.println("edge: " + e.getVertex1() + " ," + e.getVertex2() + " " +edges.get(e).getCurrentPackages() + "     " + edges.get(e).getCapacity());
+//                        }
+//                        System.out.println();
+//                        System.out.println();
 
                         if(!edges.get(new Edge(currentVertex, nextVertex)).addCurrentPackages(packagesIntensityMap.get(v).get(vv))){
-//                            return "failed reason - packagesIntensity";
-                            System.out.println("@@@@@@@@@@@@@@@@");
                             return NetworkTestResult.PACKAGES_INTENSITY_FAIL;
                         }
-                        System.out.println(sum_e());
                         if(sum_e() > T_max){
-                            System.out.println("@@@@@@@@@@@@@@@@");
-//                            return "failed reason - time";
                             return NetworkTestResult.TIME_FAIL;
                         }
-//                        if(!edges.get(new Edge(currentVertex, nextVertex)).addCurrentPackages(packagesIntensityMap.get(v).get(vv)) ||
-//                                sum_e() > T_max){
-//                            return false;
-//                        }
                         if(edges.get(new Edge(currentVertex, nextVertex)).getUnspoiltProbability() < ThreadLocalRandom.current().nextDouble()){
                             g.removeEdge(currentVertex, nextVertex);
                             edges.remove(new Edge(currentVertex, nextVertex));
                             if(!new ConnectivityInspector(g).isGraphConnected()){
-//                                return "failed reason - graph is not connected";
-//                                return false;
                                 return NetworkTestResult.GRAPH_INCONNECTION_FAIL;
                             }
                         }
-
                         currentVertex = nextVertex;
-
                     }
             }
         }
-//        return "successful";
-//        return true;
         return NetworkTestResult.SUCCESSFUL;
     }
 
