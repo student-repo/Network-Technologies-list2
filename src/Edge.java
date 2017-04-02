@@ -11,10 +11,12 @@ public class Edge implements Comparable{
     private String vertex1;
     private String vertex2;
 
+
     public Edge(String vertex1, String vertex2) {
         this.vertex1 = vertex1;
         this.vertex2 = vertex2;
     }
+
 
     public static void main(String[] s){
         Edge e = new Edge("v1", "v2");
@@ -97,4 +99,5 @@ public class Edge implements Comparable{
     public String getVertex2() {
         return vertex2;
     }
+
 }

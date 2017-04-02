@@ -33,7 +33,6 @@ public class Graph2 {
     private String dataFilePath;
     private double T_max;
     private HashMap<String, HashMap<String, Integer>> packagesIntensityMap;
-    private int averagePackageBitNumber = 1480;
     private int packagesIntensitySum;
     UndirectedGraph<String, DefaultEdge> g;
 
@@ -115,9 +114,8 @@ public class Graph2 {
     private double sum_e(){
         double s = 0.0;
         for(Edge e: edges.keySet()){
-            s += (double)edges.get(e).getCurrentPackages()/((double)edges.get(e).getCapacity()/(double)averagePackageBitNumber - (double)edges.get(e).getCurrentPackages());
+            s += (double)edges.get(e).getCurrentPackages()/((double)edges.get(e).getCapacity() - (double)edges.get(e).getCurrentPackages());
         }
-        System.out.println((double)s / (double)packagesIntensitySum);
         return (double)s / (double)packagesIntensitySum;
     }
 
@@ -125,12 +123,38 @@ public class Graph2 {
         return g;
     }
 
-    public String networkSingleTest(){
+    public void networkTest(int n){
+        int testSuccessful = 0;
+        int packagesIntensityFail = 0;
+        int graphInconnectionFail = 0;
+        int timeFail = 0;
+        for(int i = 0; i < n; i++){
+            NetworkTestResult t= networkSingleTest();
+            if(t == NetworkTestResult.PACKAGES_INTENSITY_FAIL){
+                packagesIntensityFail++;
+            }
+            else if(t == NetworkTestResult.GRAPH_INCONNECTION_FAIL){
+                graphInconnectionFail++;
+            }
+            else if(t == NetworkTestResult.TIME_FAIL){
+                timeFail++;
+            }
+            else if(t == NetworkTestResult.SUCCESSFUL){
+                testSuccessful++;
+            }
+        }
+        System.out.println("test number: " + n + " successful tests: " + testSuccessful + " packages intensity fail: " + packagesIntensityFail +
+        " graph inconnection fail: " + graphInconnectionFail + " time fail: " + timeFail);
+    }
+
+    public NetworkTestResult networkSingleTest(){
 //        UndirectedGraph<String, DefaultEdge> g = createGraph();
+        initVertexes();
+        initEdges();
         g = createGraph();
         for(String v: packagesIntensityMap.keySet()){
             for(String vv: packagesIntensityMap.get(v).keySet()){
-                System.out.println("vertex: " + v + " key: " + vv + " value: " + packagesIntensityMap.get(v).get(vv) + " random value: " + ThreadLocalRandom.current().nextDouble());
+//                System.out.println("vertex: " + v + " key: " + vv + " value: " + packagesIntensityMap.get(v).get(vv) + " random value: " + ThreadLocalRandom.current().nextDouble());
                 String currentVertex = v;
                 String nextVertex = "";
                     while(!nextVertex.equals(vv)){
@@ -141,37 +165,38 @@ public class Graph2 {
 
 
                         if(!edges.get(new Edge(currentVertex, nextVertex)).addCurrentPackages(packagesIntensityMap.get(v).get(vv))){
-                            return "failed reason - packagesIntensity";
+//                            return "failed reason - packagesIntensity";
+                            System.out.println("@@@@@@@@@@@@@@@@");
+                            return NetworkTestResult.PACKAGES_INTENSITY_FAIL;
                         }
+                        System.out.println(sum_e());
                         if(sum_e() > T_max){
-                            return "failed reason - time";
+                            System.out.println("@@@@@@@@@@@@@@@@");
+//                            return "failed reason - time";
+                            return NetworkTestResult.TIME_FAIL;
                         }
 //                        if(!edges.get(new Edge(currentVertex, nextVertex)).addCurrentPackages(packagesIntensityMap.get(v).get(vv)) ||
 //                                sum_e() > T_max){
-//                            return "failed reason - packagesIntensity";
+//                            return false;
 //                        }
                         if(edges.get(new Edge(currentVertex, nextVertex)).getUnspoiltProbability() < ThreadLocalRandom.current().nextDouble()){
                             g.removeEdge(currentVertex, nextVertex);
                             edges.remove(new Edge(currentVertex, nextVertex));
                             if(!new ConnectivityInspector(g).isGraphConnected()){
-                                return "failed reason - graph is not connected";
+//                                return "failed reason - graph is not connected";
+//                                return false;
+                                return NetworkTestResult.GRAPH_INCONNECTION_FAIL;
                             }
                         }
-//                        System.out.println(edges.get(new Edge(currentVertex, nextVertex)).getUnspoiltProbability());
-//                        System.out.println(ThreadLocalRandom.current().nextDouble());
-
-
 
                         currentVertex = nextVertex;
-//                        System.out.println("current vertex: " + currentVertex);
-//                    if(edges.get(new Edge(currentVertex, nextVertex)).getUnspoiltProbability() < ThreadLocalRandom.current().nextDouble()){
-//                        return false;
-//                    }
 
                     }
             }
         }
-        return "successful";
+//        return "successful";
+//        return true;
+        return NetworkTestResult.SUCCESSFUL;
     }
 
     public Edge getNextShortestEdge(String v, UndirectedGraph<String, DefaultEdge> g, String v3){

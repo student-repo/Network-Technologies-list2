@@ -10,6 +10,7 @@ public class Task1C {
 
     public static void main(String[] args){
         Graph graph = new Graph();
+        graph.initTask1GraphStructure();
 
         UndirectedGraph<String, DefaultEdge> g = graph.createGraph();
         graph.addEdge("v1", "v20", 0.95);
@@ -20,6 +21,7 @@ public class Task1C {
         System.out.println();
 
         graph = new Graph();
+        graph.initTask1GraphStructure();
         graph.addEdge("v1", "v20", 0.95);
         graph.addEdge("v1", "v10", 0.8);
         graph.addEdge("v5", "v15", 0.7);
@@ -28,6 +30,7 @@ public class Task1C {
         System.out.println();
 
         graph = new Graph();
+        graph.initTask1GraphStructure();
         graph.addEdge("v1", "v20", 0.95);
         graph.addEdge("v1", "v10", 0.8);
         graph.addEdge("v5", "v15", 0.7);
@@ -36,6 +39,7 @@ public class Task1C {
         System.out.println();
 
         graph = new Graph();
+        graph.initTask1GraphStructure();
         graph.addEdge("v1", "v20", 0.95);
         graph.addEdge("v1", "v10", 0.8);
         graph.addEdge("v5", "v15", 0.7);
@@ -44,6 +48,7 @@ public class Task1C {
         System.out.println();
 
         graph = new Graph();
+        graph.initTask1GraphStructure();
         graph.addEdge("v1", "v20", 0.95);
         graph.addEdge("v1", "v10", 0.8);
         graph.addEdge("v5", "v15", 0.7);
@@ -52,6 +57,7 @@ public class Task1C {
         System.out.println();
 
         graph = new Graph();
+        graph.initTask1GraphStructure();
         graph.addEdge("v1", "v20", 0.95);
         graph.addEdge("v1", "v10", 0.8);
         graph.addEdge("v5", "v15", 0.7);
@@ -60,6 +66,7 @@ public class Task1C {
         System.out.println();
 
         graph = new Graph();
+        graph.initTask1GraphStructure();
         graph.addEdge("v1", "v20", 0.95);
         graph.addEdge("v1", "v10", 0.8);
         graph.addEdge("v5", "v15", 0.7);
@@ -68,6 +75,7 @@ public class Task1C {
         System.out.println();
 
         graph = new Graph();
+        graph.initTask1GraphStructure();
         graph.addEdge("v1", "v20", 0.95);
         graph.addEdge("v1", "v10", 0.8);
         graph.addEdge("v5", "v15", 0.7);

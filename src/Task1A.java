@@ -7,9 +7,11 @@ public class Task1A {
 
     public static void main(String[] args){
         Graph graph = new Graph();
+        graph.initTask1GraphStructure();
         System.out.println(graph.testNetwork(100000));
         System.out.println();
         graph = new Graph();
+        graph.initTask1GraphStructure();
         System.out.println(graph.testNetwork(100000));
         System.out.println();
 

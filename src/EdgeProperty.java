@@ -3,9 +3,10 @@ public class EdgeProperty{
     private int capacity;
     private int currentPackages;
     private double unspoiltProbability;
+    private int averagePackageBitNumber = 1480;
 
     public EdgeProperty(int capacity, double unspoiltProbability) {
-        this.capacity = capacity;
+        this.capacity = capacity / averagePackageBitNumber;
         currentPackages = 0;
         this.unspoiltProbability = unspoiltProbability;
     }

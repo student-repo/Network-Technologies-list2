@@ -8,7 +8,8 @@ public class Task2 {
     public static void main(String[] args) throws IOException {
         Graph2 g = new Graph2();
         g.initGraphStructure();
-        System.out.println(g.networkSingleTest());
+//        System.out.println(g.networkSingleTest());
+        g.networkTest(1000);
 
 
         JFrame frame = new JFrame();

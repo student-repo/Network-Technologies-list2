@@ -10,6 +10,7 @@ public class Task1B {
 
     public static void main(String[] args){
         Graph graph = new Graph();
+        graph.initTask1GraphStructure();
 
         UndirectedGraph<String, DefaultEdge> g = graph.createGraph();
         graph.addEdge("v1", "v20", 0.95);

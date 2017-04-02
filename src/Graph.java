@@ -1,11 +1,9 @@
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.ThreadLocalRandom;
 
-import javax.swing.*;
 
 import org.jgraph.*;
 import org.jgraph.graph.*;
@@ -28,7 +26,9 @@ public class Graph {
     private int nodeVisualizationDistance = 80;
 
 
-    public Graph(){
+    public Graph(){ }
+
+    public void initTask1GraphStructure(){
         initGraphStructure();
         initEdgeUnspoiltProbability();
     }
@@ -136,6 +136,7 @@ public class Graph {
     }
 
 
+
     public static void main(String[] args){
         setScreenWidth();
         JGraphAdapterDemo applet = new JGraphAdapterDemo();
@@ -147,11 +148,17 @@ public class Graph {
         g.addEdge("v1", "v20");
 
 
-        GraphPath a = (GraphPath) new KShortestPaths(g, "v1", 1).getPaths("v19").get(0);
+        GraphPath a = (GraphPath) new KShortestPaths(g, "v1", 1).getPaths("v18").get(0);
 
 //        System.out.println(new KShortestPaths(g, "v1", 1).getPaths("v4").get(0));
 
         System.out.println(a.getEdgeList());
+        System.out.println(((GraphPath) new KShortestPaths(g, "v1", 1).getPaths("v18").get(0)).getEdgeList().size());
+
+//        System.out.println("|" + a.getEdgeList().get(0).toString().split("\\:")[0].toString().substring(1, a.getEdgeList().get(0).toString().split("\\:")[0].toString().length() - 1) + "|");
+        System.out.println("|" + getFirtsVertexFromEdgeSyntax(a.getEdgeList().get(0).toString()) + "|");
+        System.out.println("|" + getSecondVertexFromEdgeSyntax(a.getEdgeList().get(0).toString()) + "|");
+//        String beforeFirstDot = filename.split("\\.")[0];
 
 
 
@@ -163,6 +170,18 @@ public class Graph {
 //        frame.setVisible(true);
 
 
+    }
+
+    public static String getSecondVertexFromEdgeSyntax(String s){
+        return removeLastChar(s.substring(s.lastIndexOf(":") + 1).substring(1));
+    }
+
+    public static String getFirtsVertexFromEdgeSyntax(String s){
+        return removeLastChar(s.split("\\:")[0].toString().substring(1));
+    }
+
+    public static String removeLastChar(String s){
+        return s.substring(0, s.length() -1);
     }
 
 

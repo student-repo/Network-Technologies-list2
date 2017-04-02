@@ -11,6 +11,7 @@ public class Task1D {
 
     public static void main(String[] args){
         Graph graph = new Graph();
+        graph.initTask1GraphStructure();
         int i, randomNum1, randomNum2;
 
         graph.addEdge("v1", "v20", 0.95);
