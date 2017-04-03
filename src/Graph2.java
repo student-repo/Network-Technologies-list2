@@ -111,13 +111,9 @@ public class Graph2 {
     private double sum_e(){
         double s = 0.0;
         for(Edge e: edges.keySet()){
-            s += (double)edges.get(e).getCurrentPackages()/((double)edges.get(e).getCapacity() - (double)edges.get(e).getCurrentPackages());
-//            System.out.println((double)edges.get(e).getCurrentPackages() + " / (" + (double)edges.get(e).getCapacity() + " - " + (double)edges.get(e).getCurrentPackages() + " )");
-//            System.out.println("s = " + s);
+            s += (double)edges.get(e).getCurrentPackages()/((double)edges.get(e).getCapacity()
+                    - (double)edges.get(e).getCurrentPackages());
         }
-//        System.out.println((double)s / (double)packagesIntensitySum);
-//        System.out.println();
-//        System.out.println();
         return (double)s / (double)packagesIntensitySum;
     }
 
@@ -145,12 +141,15 @@ public class Graph2 {
                 testSuccessful++;
             }
         }
-        System.out.println("test number: " + n + " successful tests: " + testSuccessful + " packages intensity fail: " + packagesIntensityFail +
-        " graph inconnection fail: " + graphInconnectionFail + " time fail: " + timeFail);
+        System.out.println("test number: " + n + " successful tests: " +
+                testSuccessful + " reliability: " +
+                (double)testSuccessful/(double)n * 100  + " %  packages intensity fail: "
+                + packagesIntensityFail + " graph inconnection fail: " +
+                graphInconnectionFail + " time fail: "
+                + timeFail);
     }
 
     private NetworkTestResult networkSingleTest(){
-        initVertexes();
         initEdges();
         g = createGraph();
         for(String v: packagesIntensityMap.keySet()){
@@ -160,13 +159,6 @@ public class Graph2 {
                     while(!nextVertex.equals(vv)){
                         nextVertex = getNextShortestEdge(currentVertex, g, vv).getVertex2();
                         currentVertex = getNextShortestEdge(currentVertex, g, vv).getVertex1();
-
-
-//                        for(Edge e: edges.keySet()){
-//                            System.out.println("edge: " + e.getVertex1() + " ," + e.getVertex2() + " " +edges.get(e).getCurrentPackages() + "     " + edges.get(e).getCapacity());
-//                        }
-//                        System.out.println();
-//                        System.out.println();
 
                         if(!edges.get(new Edge(currentVertex, nextVertex)).addCurrentPackages(packagesIntensityMap.get(v).get(vv))){
                             return NetworkTestResult.PACKAGES_INTENSITY_FAIL;
@@ -185,6 +177,7 @@ public class Graph2 {
                     }
             }
         }
+//        System.out.println("T: " + sum_e() + " ");
         return NetworkTestResult.SUCCESSFUL;
     }
 
